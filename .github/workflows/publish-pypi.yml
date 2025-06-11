@@ -47,7 +47,12 @@ jobs:
           pnpm build
           pnpm lint
           pnpm test
-
+      - name: Publish to cargo
+        run: |
+          cd libs/braillify
+          cargo publish
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
       - name: Publish to pypi
         run: |
           cd packages/python
@@ -55,10 +60,4 @@ jobs:
         env:
           PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
 
-      - name: Publish to cargo
-        run: |
-          cd libs/braillify
-          cargo publish
-        env:
-          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
 
