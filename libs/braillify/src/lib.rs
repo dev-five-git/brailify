@@ -47,7 +47,7 @@ impl Encoder {
 
     pub fn encode(&mut self, text: &str, result: &mut Vec<u8>) -> Result<(), String> {
         let words = text
-            .split(' ')
+            .split_ascii_whitespace()
             .filter(|word| !word.is_empty())
             .collect::<Vec<&str>>();
 
