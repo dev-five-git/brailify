@@ -1,6 +1,8 @@
 'use client'
-import { Box, Flex, Image, Input, Text, VStack } from '@devup-ui/react'
+import { Box, Flex, Image, Text, VStack } from '@devup-ui/react'
 import { useEffect, useState } from 'react'
+
+import { TransInput } from './TransInput'
 
 export function Trans() {
   const [input, setInput] = useState('')
@@ -19,6 +21,10 @@ export function Trans() {
       })
     })
   }, [input])
+
+  const [inputFocused, setInputFocused] = useState(false)
+  const [translationFocused, setTranslationFocused] = useState(false)
+
   return (
     <VStack gap={['16px', null, null, '30px']}>
       <Flex
@@ -45,34 +51,25 @@ export function Trans() {
         alignItems="center"
         flexDirection={['column', null, null, 'row']}
         gap={['12px', null, null, '30px']}
-        h={['auto', null, null, '500px']}
+        h={[inputFocused ? '50dvh' : 'auto', null, null, '500px']}
       >
-        <Flex flex="1" h="100%" w="100%">
-          <Input
-            as="textarea"
-            bg="$containerBackground"
-            border="none"
-            borderRadius={['16px', null, null, '30px']}
-            color="$text"
-            h={['400px', null, null, 'auto']}
-            onChange={(e) => setInput(e.target.value)}
-            p={['16px', null, null, '40px']}
-            placeholder={
-              'braillify는 한글 점역을 빠르고 안정적으로 처리하는 Rust 기반 라이브러리입니다.\nNode.js, WebAssembly, Python 등 다양한 환경에서 사용할 수 있어요.\n\n점역하고 싶은 문장이나 단어를 여기에 입력해 직접 확인해보세요!'
-            }
-            resize="none"
-            selectors={{
-              '&::placeholder': {
-                color: '$text',
-                typography: 'braille',
-                opacity: 0.5,
-              },
-            }}
-            typography="braille"
-            value={input}
-            w="100%"
-          />
-        </Flex>
+        <TransInput
+          blurPlaceholder={
+            'braillify는 한글 점역을 빠르고 안정적으로 처리하는 Rust 기반 라이브러리입니다.\nNode.js, WebAssembly, Python 등 다양한 환경에서 사용할 수 있어요.\n\n점역하고 싶은 문장이나 단어를 여기에 입력해 직접 확인해보세요!'
+          }
+          focusPlaceholder="이곳에 점역할 내용을 입력해주세요!"
+          isFocused={inputFocused}
+          onBlur={() => {
+            setInputFocused(false)
+            setTranslationFocused(false)
+          }}
+          onChange={(e) => setInput(e.target.value)}
+          onFocus={() => {
+            setInputFocused(true)
+            setTranslationFocused(true)
+          }}
+          value={input}
+        />
         <Flex>
           <Image
             alt=""
@@ -88,32 +85,15 @@ export function Trans() {
             w={['16px', null, null, '24px']}
           />
         </Flex>
-        <Flex flex="1" h="100%" w="100%">
-          <Input
-            as="textarea"
-            bg="$containerBackground"
-            border="none"
-            borderRadius={['16px', null, null, '30px']}
-            color="$text"
-            h={['400px', null, null, 'auto']}
-            p={['16px', null, null, '40px']}
-            placeholder={
-              '⠴⠃⠗⠁⠊⠇⠇⠊⠋⠽⠲⠉⠵ ⠚⠒⠈⠮ ⠨⠎⠢⠱⠁⠮ ⠠⠘⠐⠪⠈⠥ ⠣⠒⠨⠻⠨⠹⠪⠐⠥ ⠰⠎⠐⠕⠚⠉⠵ ⠴⠠⠗⠥⠌⠲ ⠈⠕⠘⠒ ⠐⠣⠕⠘⠪⠐⠎⠐⠕⠕⠃⠉⠕⠊⠲\n⠴⠠⠝⠕⠙⠑⠲⠚⠎⠂ ⠠⠺⠑⠃⠠⠁⠎⠎⠑⠍⠃⠇⠽⠂ ⠠⠏⠽⠹⠕⠝⠲ ⠊⠪⠶ ⠊⠣⠜⠶⠚⠒ ⠚⠧⠒⠈⠻⠝⠠⠎ ⠇⠬⠶⠚⠂ ⠠⠍ ⠕⠌⠎⠬⠲\n\n⠨⠎⠢⠱⠁⠚⠈⠥ ⠠⠕⠲⠵ ⠑⠛⠨⠶⠕⠉ ⠊⠒⠎⠐⠮ ⠱⠈⠕⠝ ⠕⠃⠐⠱⠁⠚⠗ ⠨⠕⠁⠨⠎⠃ ⠚⠧⠁⠟⠚⠗⠘⠥⠠⠝⠬⠖'
-            }
-            readOnly
-            resize="none"
-            selectors={{
-              '&::placeholder': {
-                color: '$text',
-                typography: 'braille',
-                opacity: 0.5,
-              },
-            }}
-            typography="braille"
-            value={translateToUnicode(input)}
-            w="100%"
-          />
-        </Flex>
+        <TransInput
+          blurPlaceholder={
+            '⠴⠃⠗⠁⠊⠇⠇⠊⠋⠽⠲⠉⠵ ⠚⠒⠈⠮ ⠨⠎⠢⠱⠁⠮ ⠠⠘⠐⠪⠈⠥ ⠣⠒⠨⠻⠨⠹⠪⠐⠥ ⠰⠎⠐⠕⠚⠉⠵ ⠴⠠⠗⠥⠌⠲ ⠈⠕⠘⠒ ⠐⠣⠕⠘⠪⠐⠎⠐⠕⠕⠃⠉⠕⠊⠲\n⠴⠠⠝⠕⠙⠑⠲⠚⠎⠂ ⠠⠺⠑⠃⠠⠁⠎⠎⠑⠍⠃⠇⠽⠂ ⠠⠏⠽⠹⠕⠝⠲ ⠊⠪⠶ ⠊⠣⠜⠶⠚⠒ ⠚⠧⠒⠈⠻⠝⠠⠎ ⠇⠬⠶⠚⠂ ⠠⠍ ⠕⠌⠎⠬⠲\n\n⠨⠎⠢⠱⠁⠚⠈⠥ ⠠⠕⠲⠵ ⠑⠛⠨⠶⠕⠉ ⠊⠒⠎⠐⠮ ⠱⠈⠕⠝ ⠕⠃⠐⠱⠁⠚⠗ ⠨⠕⠁⠨⠎⠃ ⠚⠧⠁⠟⠚⠗⠘⠥⠠⠝⠬⠖'
+          }
+          focusPlaceholder="⠕⠈⠥⠄⠝⠀⠨⠎⠢⠱⠁⠚⠂⠀⠉⠗⠬⠶⠮⠀⠕⠃⠐⠱⠁⠚⠗⠨⠍⠠⠝⠬⠖"
+          isFocused={translationFocused}
+          readOnly
+          value={translateToUnicode(input)}
+        />
       </Flex>
     </VStack>
   )
